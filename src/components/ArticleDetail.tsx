@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { getArticleById } from '../services/api';
 import { FacebookShareButton, TwitterShareButton, LinkedinShareButton, WhatsappShareButton, FacebookIcon, TwitterIcon, LinkedinIcon, WhatsappIcon } from 'react-share';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 interface Article {
   id: number;
@@ -57,17 +57,16 @@ const ArticleDetail: React.FC = () => {
 
   const pageTitle = article.title;
   const pageDescription = article.description;
-  const pageImage = article.cover_image || "default-image-url";
-  const pageSlug = encodeURIComponent(article.title.toLowerCase().replace(/ /g, "-"));
-  const pageUrl = `${baseURL}/article/${pageSlug}`;
+  const pageImage = article.cover_image || `${baseURL}/default-image.png`;
+  const pageUrl = `${baseURL}/article/${article.id}`;
 
   return (
     <div className="max-w-4xl mx-auto p-5 sm:p-8 space-y-8">
       {/* SEO Meta Tags */}
       <Helmet>
-        <title>{pageTitle} - Deals Articles</title>
+        <title>{pageTitle} - Deals Article</title>
         <meta name="description" content={pageDescription} />
-        <meta name="keywords" content="React, Web Development, SEO, Articles, Tech" />
+        <meta name="keywords" content={tags.join(', ')} />
         <meta name="robots" content="index, follow" />
 
         {/* Open Graph Meta Tags */}
@@ -131,24 +130,21 @@ const ArticleDetail: React.FC = () => {
       </div>
 
       {/* Social Media Share Buttons */}
-      <div className="flex flex-wrap gap-2">
-      <strong className="text-gray-700">Share: </strong>
-        {/* Facebook */}
+      <div className="flex flex-wrap gap-4 items-center">
+        <strong className="text-gray-700">Share: </strong>
+        
         <FacebookShareButton url={pageUrl} title={pageTitle} className="flex items-center">
           <FacebookIcon size={32} round />
         </FacebookShareButton>
 
-        {/* Twitter */}
         <TwitterShareButton url={pageUrl} title={pageTitle} className="flex items-center">
           <TwitterIcon size={32} round />
         </TwitterShareButton>
 
-        {/* LinkedIn */}
         <LinkedinShareButton url={pageUrl} title={pageTitle} summary={article.description} className="flex items-center">
           <LinkedinIcon size={32} round />
         </LinkedinShareButton>
 
-        {/* WhatsApp */}
         <WhatsappShareButton url={pageUrl} title={pageTitle} className="flex items-center">
           <WhatsappIcon size={32} round />
         </WhatsappShareButton>
